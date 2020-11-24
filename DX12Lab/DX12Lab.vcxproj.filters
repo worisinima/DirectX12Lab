@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{553c52c9-453a-4452-9d76-54b862248edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{50da1ad9-5d94-416c-882e-e74a4047118c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\CImage">
+      <UniqueIdentifier>{7c5d62f3-1643-405e-9487-f47bea828c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\CImage\plugins">
+      <UniqueIdentifier>{dc371257-b8fd-4c44-937a-852b7431f4e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Common">
+      <UniqueIdentifier>{cd4568da-63a6-4f3e-af7d-b07c837caaf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core">
+      <UniqueIdentifier>{b79b70a5-6d3f-410f-a633-436a25b8dc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ImGUI">
+      <UniqueIdentifier>{a72f8e35-3e6b-42fa-aa8d-58a410954cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\String">
+      <UniqueIdentifier>{768e2559-78fc-420b-aa1a-193eccf2e6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Config">
+      <UniqueIdentifier>{272dd4ba-51c8-461d-bfda-5e79c9adc947}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Math">
+      <UniqueIdentifier>{1a87171d-a540-47d9-8dea-f457e6e4d185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\SkinMesh">
+      <UniqueIdentifier>{1a180dfe-6569-4bca-a292-a94778f832db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\color.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\OneFrame.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DebugArrow.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\IBLImportantSample.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PositionOnly.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\CImage\CImg.h">
+      <Filter>Source\CImage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\add_fileformat.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\bayer.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\chlpca.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\cvMat.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\draw_gradient.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\inpaint.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\ipl.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\ipl_alt.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\jpeg_buffer.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\loop_macros.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\matlab.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\nlmeans.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\skeleton.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\tiff_stream.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\tinymatwriter.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\vrml.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CImage\plugins\vtk.h">
+      <Filter>Source\CImage\plugins</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\Camera.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\d3dUtil.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\d3dx12.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\DDSTextureLoader.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\GameTimer.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\GeometryGenerator.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\MathHelper.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Common\UploadBuffer.h">
+      <Filter>Source\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Core.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\RenderCore.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imconfig.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imgui.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imgui_impl_dx12.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imgui_impl_win32.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imgui_internal.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imstb_rectpack.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imstb_textedit.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ImGUI\imstb_truetype.h">
+      <Filter>Source\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\String\StringHelper.h">
+      <Filter>Source\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\D3DApp.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FileHelper.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FrameResource.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MathShowCase.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OBJLoader.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\OnFramePass.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Renderer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderTarget.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderTargetPool.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ShadowMapPass.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StaticMesh.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Texture2D.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TextureLoader.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Waves.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CubeTexture.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DebugArrowPass.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\pch.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math\FMathLib.h">
+      <Filter>Source\Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\IBLBRDF.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkinMesh\SkeletonMesh.h">
+      <Filter>Source\SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkinMesh\LoadM3d.h">
+      <Filter>Source\SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkinMesh\SkinnedData.h">
+      <Filter>Source\SkinMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SkinMesh\Animation.h">
+      <Filter>Source\SkinMesh</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Common\Camera.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\d3dUtil.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\DDSTextureLoader.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\GameTimer.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\GeometryGenerator.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Common\MathHelper.cpp">
+      <Filter>Source\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Core.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\RenderCore.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_draw.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_impl_dx12.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_impl_win32.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ImGUI\imgui_widgets.cpp">
+      <Filter>Source\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\String\StringHelper.cpp">
+      <Filter>Source\String</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\D3DApp.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FrameResource.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\OneFramePass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Renderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderTarget.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\RenderTargetPool.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ShadowMapPass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StaticMesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Texture2D.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Waves.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CubeTexture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DebugArrowPass.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\pch.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Math\FMathLib.cpp">
+      <Filter>Source\Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\IBLBRDF.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkinMesh\SkeletonMesh.cpp">
+      <Filter>Source\SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkinMesh\LoadM3d.cpp">
+      <Filter>Source\SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkinMesh\SkinnedData.cpp">
+      <Filter>Source\SkinMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SkinMesh\Animation.cpp">
+      <Filter>Source\SkinMesh</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Source\Core\Math\FMathLib.inl">
+      <Filter>Source\Core\Math</Filter>
+    </None>
+  </ItemGroup>
+</Project>
