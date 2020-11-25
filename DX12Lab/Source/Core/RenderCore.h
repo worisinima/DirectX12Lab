@@ -3,6 +3,7 @@
 #include "Core.h"
 #include "../Common/d3dUtil.h"
 #include "../SkinMesh/SkinnedData.h"
+#include "../Common/UploadBuffer.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace std;
@@ -178,6 +179,22 @@ enum class EBlendState : uint8_t
 	EAlphaTest
 };
 
+struct MaterialUniformBuffer
+{
+
+	MaterialUniformBuffer():
+		BaseColor(1.0f, 1.0f, 1.0f, 1.0f),
+		Roughness(0.5f),
+		Metallic(0.5f)
+	{
+
+	}
+
+	DirectX::FMathLib::Vector4 BaseColor;
+	float Roughness;
+	float Metallic;
+};
+
 class MaterialResource
 {
 public:
@@ -189,6 +206,7 @@ public:
 		const PipelineInfoForMaterialBuild& PInfo,
 		Shader* VS,
 		Shader* PS,
+		const MaterialUniformBuffer& MatUniform,
 		bool bSkinnedMesh = false,
 		EBlendState blendState = EBlendState::EOpaque
 	);
@@ -213,7 +231,7 @@ public:
 	ComPtr<ID3D12RootSignature> mSkinnedRootSignature;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mInputLayout;
 	std::vector<D3D12_INPUT_ELEMENT_DESC> mSkinnedInputLayout;
-
+	std::shared_ptr<UploadBuffer<MaterialUniformBuffer>> mMaterialUniformBuffer = nullptr;
 	EBlendState mBlendState;
 
 private:

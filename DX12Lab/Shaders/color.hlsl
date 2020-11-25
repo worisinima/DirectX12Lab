@@ -42,6 +42,13 @@ cbuffer cbSkinned : register(b2)
 	float4x4 gBoneTransforms[96];
 };
 
+cbuffer cbMaterial : register(b3)
+{
+	float4 cbBaseColor;
+	float cbRoughness;
+	float cbMetallic;
+};
+
 struct VertexIn
 {
 	float3 PosL : POSITION;
@@ -316,9 +323,10 @@ float4 PS(VertexOut pin) : SV_Target
 	float NoR = saturate(dot(N, R));
 	
 	float4 BaseColor = gTextures[0].Sample(gsamAnisotropicWrap, pin.Coord);
+	BaseColor.rgb *= cbBaseColor.rgb;
 	
-	float Roughness = 0.8f;
-	float Metallic = 0.01f;
+	float Roughness = cbRoughness;
+	float Metallic = cbMetallic;
 	float F0 = 0.04f;
 	float AO = 1.0f;
 	F0 = lerp(F0.rrr, BaseColor.rgb, Metallic);

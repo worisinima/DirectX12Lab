@@ -31,6 +31,8 @@ if (RenderPass != nullptr)\
 	RenderPass = nullptr;\
 }
 
+#define DRAW_DEBUG_WINDOW 0
+
 Renderer::Renderer(const int& clientWidth, const int& clientHeight)
 {
 	mClientWidth = clientWidth;
@@ -551,18 +553,24 @@ void Renderer::DrawRenderItems(ID3D12GraphicsCommandList* mCommandList, const st
 			D3D12_GPU_VIRTUAL_ADDRESS skinnedCBAddress = skinnedCB->GetGPUVirtualAddress() + ri->SkinnedCBIndex * skinnedCBByteSize;
 			mCommandList->SetGraphicsRootConstantBufferView(2, skinnedCBAddress);
 
+			mCommandList->SetGraphicsRootConstantBufferView(3, ri->mat.mMaterialUniformBuffer->Resource()->GetGPUVirtualAddress());
+
 			ID3D12DescriptorHeap* descriptorHeaps[] = { ri->mat.mMaterialSRVHeap.Get() };
 			mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 			CD3DX12_GPU_DESCRIPTOR_HANDLE texHandle(ri->mat.mMaterialSRVHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootDescriptorTable(3, texHandle);
+			mCommandList->SetGraphicsRootDescriptorTable(4, texHandle);
 		}
 		else
 		{
 
 			ID3D12DescriptorHeap* descriptorHeaps[] = { ri->mat.mMaterialSRVHeap.Get() };
 			mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+
+			mCommandList->SetGraphicsRootConstantBufferView(2, ri->mat.mMaterialUniformBuffer->Resource()->GetGPUVirtualAddress());
+
 			CD3DX12_GPU_DESCRIPTOR_HANDLE texHandle(ri->mat.mMaterialSRVHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootDescriptorTable(2, texHandle);
+			mCommandList->SetGraphicsRootDescriptorTable(3, texHandle);
+			
 		}
 
 		mCommandList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
@@ -636,7 +644,7 @@ void Renderer::Draw(const GameTimer& gt)
 	}
 
 //是否开启Debug小窗口
-#if 1
+#if DRAW_DEBUG_WINDOW
 	//Debug window pass
 	mDebugPass->SetWindowScaleAndCenter(Vector2(0.25, 0.25f), Vector2(mClientWidth - 300, mClientHeight - 300));
 	mDebugPass->DrawMaterialToRendertarget(
@@ -852,14 +860,29 @@ void Renderer::LoadTextures()
 
 	PipelineInfoForMaterialBuild Info = {mHDRRendertarget->GetFormat(), mDepthStencilFormat, m4xMsaaState ? 4 : 1 , m4xMsaaState ? (m4xMsaaQuality - 1) : 0 };
 
+	MaterialUniformBuffer parm1;
+	parm1.BaseColor = Vector4(1, 0, 0, 1);
+	parm1.Metallic = 0.01f;
+	parm1.Roughness = 0.8f;
+
+	MaterialUniformBuffer parm2;
+	parm2.BaseColor = Vector4(0, 1, 0, 1);
+	parm2.Metallic = 1.0f;
+	parm2.Roughness = 0.2f;
+
+	MaterialUniformBuffer parm3;
+	parm3.BaseColor = Vector4(0, 0, 1, 1);
+	parm3.Metallic = 0.5f;
+	parm3.Roughness = 0.5f;
+
 	MaterialResource Mat1;
-	Mat1.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap , mIBLBRDFTarget , normTex.get() ,cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get());
+	Mat1.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap , mIBLBRDFTarget , normTex.get() ,cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm1);
 
 	MaterialResource Mat2;
-	Mat2.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { redTexture.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get());
+	Mat2.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm2);
 
 	MaterialResource Mat3;
-	Mat3.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get());
+	Mat3.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm3);
 
 	MaterialResource SkinMat;
 	SkinMat.InitMaterial
@@ -870,6 +893,7 @@ void Renderer::LoadTextures()
 		Info, 
 		SkinVertexShader.get(),
 		SkinPixleShader.get(),
+		parm1,
 		true
 	);
 

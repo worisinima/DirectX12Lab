@@ -12,6 +12,7 @@ HRESULT MaterialResource::InitMaterial(
 	const PipelineInfoForMaterialBuild& PInfo,
 	Shader* VS,
 	Shader* PS,
+	const MaterialUniformBuffer& MatUniform,
 	bool bSkinnedMesh,
 	EBlendState blendState
 )
@@ -124,6 +125,9 @@ HRESULT MaterialResource::InitMaterial(
 	//alphaTestedPsoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 	//ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&alphaTestedPsoDesc, IID_PPV_ARGS(&mPSOs["alphaTested"])));
 
+	mMaterialUniformBuffer = std::make_shared<UploadBuffer<MaterialUniformBuffer>>(md3dDevice, 1, true);
+	mMaterialUniformBuffer->CopyData(0, MatUniform);
+
 	return S_OK;
 }
 
@@ -155,14 +159,14 @@ HRESULT MaterialResource::BuildRootSignature(ID3D12Device* md3dDevice, ID3D12Gra
 	texTable.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[3];
+	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
 
 	// Create root CBVs.
 	slotRootParameter[0].InitAsConstantBufferView(0);
 	slotRootParameter[1].InitAsConstantBufferView(1);
-	//slotRootParameter[2].InitAsConstantBufferView(2);
-	slotRootParameter[2].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
-
+	slotRootParameter[2].InitAsConstantBufferView(3);
+	slotRootParameter[3].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	
 	auto staticSamplers = GetStaticSamplers();
 
 	// A root signature is an array of root parameters.
@@ -201,13 +205,15 @@ HRESULT MaterialResource::BuildSkinnedRootSignature(ID3D12Device* md3dDevice, ID
 	texTable.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
 	// Root parameter can be a table, root descriptor or root constants.
-	CD3DX12_ROOT_PARAMETER slotRootParameter[4];
+	CD3DX12_ROOT_PARAMETER slotRootParameter[5];
 
 	// Create root CBVs.
 	slotRootParameter[0].InitAsConstantBufferView(0);
 	slotRootParameter[1].InitAsConstantBufferView(1);
 	slotRootParameter[2].InitAsConstantBufferView(2);
-	slotRootParameter[3].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	slotRootParameter[3].InitAsConstantBufferView(3);
+	slotRootParameter[4].InitAsDescriptorTable(1, &texTable, D3D12_SHADER_VISIBILITY_PIXEL);
+	
 
 	auto staticSamplers = GetStaticSamplers();
 
