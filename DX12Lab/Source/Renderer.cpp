@@ -875,6 +875,11 @@ void Renderer::LoadTextures()
 	parm3.Metallic = 0.5f;
 	parm3.Roughness = 0.5f;
 
+	MaterialUniformBuffer parm4;
+	parm4.BaseColor = Vector4(0.5, 0.5, 0.5, 1);
+	parm4.Metallic = 0.5f;
+	parm4.Roughness = 0.5f;
+
 	MaterialResource Mat1;
 	Mat1.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap , mIBLBRDFTarget , normTex.get() ,cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm1);
 
@@ -883,6 +888,9 @@ void Renderer::LoadTextures()
 
 	MaterialResource Mat3;
 	Mat3.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm3);
+
+	MaterialResource Mat4;
+	Mat4.InitMaterial(md3dDevice.Get(), mCommandList.Get(), { bmptex.get(),  mShadowMap, mIBLBRDFTarget, normTex.get() , cubeTex.get() }, Info, StandardVertexShader.get(), StandardPixleShader.get(), parm4);
 
 	MaterialResource SkinMat;
 	SkinMat.InitMaterial
@@ -893,7 +901,7 @@ void Renderer::LoadTextures()
 		Info, 
 		SkinVertexShader.get(),
 		SkinPixleShader.get(),
-		parm1,
+		parm4,
 		true
 	);
 
@@ -904,6 +912,7 @@ void Renderer::LoadTextures()
 	mMaterials.push_back(std::move(Mat2));
 	mMaterials.push_back(std::move(Mat3));
 	mMaterials.push_back(std::move(SkinMat));
+	mMaterials.push_back(std::move(Mat4));
 
 	mTexture2Ds["bricks"] = std::move(bricks);
 	mTexture2Ds["stone"] = std::move(stone);
@@ -1061,7 +1070,7 @@ void Renderer::BuildRenderItems()
 		OBJRItem1->IndexCount = OBJRItem1->Geo->DrawArgs["Default"].IndexCount;
 		OBJRItem1->StartIndexLocation = OBJRItem1->Geo->DrawArgs["Default"].StartIndexLocation;
 		OBJRItem1->BaseVertexLocation = OBJRItem1->Geo->DrawArgs["Default"].BaseVertexLocation;
-		OBJRItem1->mat = mMaterials[0];
+		OBJRItem1->mat = mMaterials[4];
 
 		mRitemLayer[(int)EPassType::Opaque].push_back(OBJRItem1.get());
 		mAllRitems.push_back(std::move(OBJRItem1));

@@ -191,8 +191,10 @@
     <ClInclude Include="Source\Common\MathHelper.h" />
     <ClInclude Include="Source\Common\UploadBuffer.h" />
     <ClInclude Include="Source\Core\Core.h" />
+    <ClInclude Include="Source\Core\Material.h" />
     <ClInclude Include="Source\Core\Math\FMathLib.h" />
     <ClInclude Include="Source\Core\RenderCore.h" />
+    <ClInclude Include="Source\Core\Shader.h" />
     <ClInclude Include="Source\CubeTexture.h" />
     <ClInclude Include="Source\D3DApp.h" />
     <ClInclude Include="Source\DebugArrowPass.h" />
@@ -233,8 +235,10 @@
     <ClCompile Include="Source\Common\GeometryGenerator.cpp" />
     <ClCompile Include="Source\Common\MathHelper.cpp" />
     <ClCompile Include="Source\Core\Core.cpp" />
+    <ClCompile Include="Source\Core\Material.cpp" />
     <ClCompile Include="Source\Core\Math\FMathLib.cpp" />
     <ClCompile Include="Source\Core\RenderCore.cpp" />
+    <ClCompile Include="Source\Core\Shader.cpp" />
     <ClCompile Include="Source\CubeTexture.cpp" />
     <ClCompile Include="Source\D3DApp.cpp" />
     <ClCompile Include="Source\DebugArrowPass.cpp" />
