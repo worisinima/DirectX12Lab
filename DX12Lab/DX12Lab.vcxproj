@@ -209,6 +209,7 @@
     <ClInclude Include="Source\ImGUI\imstb_rectpack.h" />
     <ClInclude Include="Source\ImGUI\imstb_textedit.h" />
     <ClInclude Include="Source\ImGUI\imstb_truetype.h" />
+    <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MathShowCase.h" />
     <ClInclude Include="Source\OBJLoader.h" />
     <ClInclude Include="Source\OnFramePass.h" />
@@ -249,6 +250,7 @@
     <ClCompile Include="Source\ImGUI\imgui_impl_dx12.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_impl_win32.cpp" />
     <ClCompile Include="Source\ImGUI\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Light.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\OneFramePass.cpp" />
     <ClCompile Include="Source\pch.cpp" />

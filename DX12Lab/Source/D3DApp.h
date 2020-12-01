@@ -53,7 +53,7 @@ private:
 	GameTimer mTimer;
 	WNDCLASSEX wc;
 	// Derived class should set these in derived constructor to customize starting values.
-	std::wstring mMainWndCaption = L"YivanEngine";
+	std::wstring mMainWndCaption = L"DirectX12Lab";
 	int mClientWidth = 1920;
 	int mClientHeight = 1080;
 

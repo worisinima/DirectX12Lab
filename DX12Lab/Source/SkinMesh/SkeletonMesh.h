@@ -23,6 +23,8 @@ public:
 class SkeletonMesh
 {
 public:
+	SkeletonMesh() = default;
+	SkeletonMesh(ID3D12Device* device);
 
 	void LoadSkeletonMesh(Microsoft::WRL::ComPtr<ID3D12Device>& md3dDevice,
 		Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList>& mCommandList);
@@ -41,6 +43,9 @@ private:
 	aiNode* FindNodeWithNameToChild(aiNode* parentNode, const std::string& destNodeName);
 	aiNode* FindNodeWithNameToParent(aiNode* parentNode, const std::string& destNodeName);
 	void DebugShowAllNode(aiNode* RootNode, int& tab);
+
+	void UpdateSkinnedCBs(const GameTimer& gt);
+	std::unique_ptr<UploadBuffer<SkinnedConstants>> mSkinedCB = nullptr;
 };
 
 class SkeletonMeshComponent

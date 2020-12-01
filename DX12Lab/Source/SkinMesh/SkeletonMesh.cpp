@@ -29,6 +29,27 @@ struct AnimChannle
 	std::vector<DirectX::FMathLib::Vector4> mRotationQuatKeys;
 };
 
+SkeletonMesh::SkeletonMesh(ID3D12Device* device)
+{
+	mSkinedCB = std::make_unique<UploadBuffer<SkinnedConstants>>(device, 1, true);
+}
+
+void SkeletonMesh::UpdateSkinnedCBs(const GameTimer& gt)
+{
+	auto currSkinnedCB = mSkinedCB.get();
+
+	// We only have one skinned model being animated.
+	mSkinnedModelInst->UpdateSkinnedAnimation(gt.DeltaTime());
+
+	SkinnedConstants skinnedConstants;
+	std::copy(
+		std::begin(mSkinnedModelInst->FinalTransforms),
+		std::end(mSkinnedModelInst->FinalTransforms),
+		&skinnedConstants.BoneTransforms[0]);
+
+	currSkinnedCB->CopyData(0, skinnedConstants);
+}
+
 aiNode* SkeletonMesh::FindNodeWithNameToChild(aiNode* parentNode, const std::string& destNodeName)
 {
 	if (parentNode != nullptr)
