@@ -37,6 +37,8 @@ cbuffer cbPass : register(b1)
 	float gDeltaTime;
 };
 
+#if SKINNED
+
 cbuffer cbSkinned : register(b2)
 {
 	float4x4 gBoneTransforms[96];
@@ -48,6 +50,29 @@ cbuffer cbMaterial : register(b3)
 	float cbRoughness;
 	float cbMetallic;
 };
+
+cbuffer cbLight : register(b4)
+{
+	float4 cbLightColorAndStrenth;
+	float4 mLightPosAndRadius;
+};
+
+#else
+
+cbuffer cbMaterial : register(b2)
+{
+	float4 cbBaseColor;
+	float cbRoughness;
+	float cbMetallic;
+};
+
+cbuffer cbLight : register(b3)
+{
+	float4 cbLightColorAndStrenth;
+	float4 mLightPosAndRadius;
+};
+
+#endif
 
 struct VertexIn
 {
@@ -309,9 +334,10 @@ float4 PS(VertexOut pin) : SV_Target
 	float4 normalMapSample = gTextures[3].Sample(gsamAnisotropicWrap, pin.Coord * 5);
 	float3 bumpedNormalW = NormalSampleToWorldSpace(normalMapSample.rgb, pin.Norm, pin.TangentW);
 	
-	float3 PointLightPos = float3(-10, 10, 10);
-	float LightRadius = 100.0f;
-	float LightStrenth = 3.14;
+	float3 PointLightPos = mLightPosAndRadius.xyz;
+	float LightRadius = mLightPosAndRadius.w;
+	float LightStrenth = cbLightColorAndStrenth.w;
+	float3 LightColor = cbLightColorAndStrenth.rgb;
 	
 	float3 WPos = pin.WorldPos;
 	float FallOff = distance(PointLightPos, WPos);
@@ -351,7 +377,7 @@ float4 PS(VertexOut pin) : SV_Target
 	
 	float3 Specular = D * G * F;
 
-	Output.rgb += (Diffuse + Specular) * NoL * Shadow * FallOff * LightStrenth;
+	Output.rgb += (Diffuse + Specular) * NoL * Shadow * (FallOff * LightStrenth * LightColor);
 
 	float LevelFrom1x1 = 1 - 1.2 * log2(Roughness);
 	float lod = 11 - 1 - LevelFrom1x1;

@@ -486,7 +486,7 @@ void D3DApp::EndRenderUI()
 }
 
 bool show_another_window = true;
-ImVec4 clear_color = ImVec4(0.45, 0.45, 0.45, 1.0f);
+ImVec4 clear_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 void D3DApp::DrawUIContent()
 {
 	// Start the Dear ImGui frame
@@ -526,4 +526,6 @@ void D3DApp::DrawUIContent()
 			show_another_window = false;
 		ImGui::End();
 	}
+
+	memcpy(&GraphicRender->mSimpleLight->mLightColor, &clear_color, sizeof(float) * 3);
 }

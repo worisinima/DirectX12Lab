@@ -11,10 +11,16 @@ struct LightConstant
 class Light
 {
 public:
-
-	Light();
+	Light() = delete;
+	Light(ID3D12Device* device);
 	~Light();
+
+	Vector3 mLightColor;
+	float mStrenth;
+	Vector3 mLightPos;
+	float mLightRadius;
 
 	std::unique_ptr<UploadBuffer<LightConstant>> mLightCB = nullptr;
 
+	void UpdateLightUniform();
 };

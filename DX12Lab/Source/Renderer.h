@@ -24,6 +24,7 @@
 #include "Texture2D.h"
 
 #include "SkinMesh/SkeletonMesh.h"
+#include "Light.h"
 
 #include <cstdlib>
 
@@ -105,6 +106,8 @@ public:
 	HWND	mhMainWnd;	// main window handle
 	bool	m4xMsaaState = false;	// 4X MSAA enabled
 	UINT	m4xMsaaQuality = 0;		// quality level of 4X MSAA
+
+	Light* mSimpleLight = nullptr;
 
 	Microsoft::WRL::ComPtr<IDXGIFactory4> mdxgiFactory;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;

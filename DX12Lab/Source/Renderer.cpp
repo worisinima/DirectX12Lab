@@ -44,8 +44,8 @@ Renderer::Renderer(const int& clientWidth, const int& clientHeight)
 	mIBLBRDFPass = new IBLBRDF();
 	mShadowMapPass = std::make_unique<ShadowMapPass>();
 
-
 	mRenderTargetPool = std::make_unique<RenderTargetPool>();
+
 }
 
 Renderer::~Renderer()
@@ -154,6 +154,12 @@ bool Renderer::InitRenderer(class D3DApp* app)
 	mdebugArrowPass->InitOneFramePass(md3dDevice, mCommandList, mBackBufferFormat);
 	mIBLBRDFPass->Init(mCommandList.Get(), md3dDevice.Get(), mIBLBRDFTarget->GetFormat());
 	mShadowMapPass->InitShadowMapPass(md3dDevice, mCommandList, mShadowMap, 3);
+
+	mSimpleLight = new Light(md3dDevice.Get());
+	mSimpleLight->mLightColor = Vector3(1, 1, 0);
+	mSimpleLight->mStrenth = 3.1415927f;
+	mSimpleLight->mLightPos = Vector3(-10, 10, 10);
+	mSimpleLight->mLightRadius = 100.0f;
 
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
@@ -554,11 +560,12 @@ void Renderer::DrawRenderItems(ID3D12GraphicsCommandList* mCommandList, const st
 			mCommandList->SetGraphicsRootConstantBufferView(2, skinnedCBAddress);
 
 			mCommandList->SetGraphicsRootConstantBufferView(3, ri->mat.mMaterialUniformBuffer->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(4, mSimpleLight->mLightCB->Resource()->GetGPUVirtualAddress());
 
 			ID3D12DescriptorHeap* descriptorHeaps[] = { ri->mat.mMaterialSRVHeap.Get() };
 			mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 			CD3DX12_GPU_DESCRIPTOR_HANDLE texHandle(ri->mat.mMaterialSRVHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootDescriptorTable(4, texHandle);
+			mCommandList->SetGraphicsRootDescriptorTable(5, texHandle);
 		}
 		else
 		{
@@ -567,10 +574,11 @@ void Renderer::DrawRenderItems(ID3D12GraphicsCommandList* mCommandList, const st
 			mCommandList->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 
 			mCommandList->SetGraphicsRootConstantBufferView(2, ri->mat.mMaterialUniformBuffer->Resource()->GetGPUVirtualAddress());
+			mCommandList->SetGraphicsRootConstantBufferView(3, mSimpleLight->mLightCB->Resource()->GetGPUVirtualAddress());
+
 
 			CD3DX12_GPU_DESCRIPTOR_HANDLE texHandle(ri->mat.mMaterialSRVHeap->GetGPUDescriptorHandleForHeapStart());
-			mCommandList->SetGraphicsRootDescriptorTable(3, texHandle);
-			
+			mCommandList->SetGraphicsRootDescriptorTable(4, texHandle);
 		}
 
 		mCommandList->DrawIndexedInstanced(ri->IndexCount, 1, ri->StartIndexLocation, ri->BaseVertexLocation, 0);
@@ -734,6 +742,7 @@ void Renderer::Update(const GameTimer& gt)
 	mShadowMapPass->UpdateShadowPassCB(gt, mClientWidth, mClientHeight, mCurrFrameResource);
 	mdebugArrowPass->Update(gt, mCamera);
 	mSkeletonMesh->UpdateSkinnedCBs(gt, mCurrFrameResource);
+	mSimpleLight->UpdateLightUniform();
 }
 
 void Renderer::UpdateObjectCBs(const GameTimer& gt)
