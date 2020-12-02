@@ -53,8 +53,8 @@ cbuffer cbMaterial : register(b3)
 
 cbuffer cbLight : register(b4)
 {
-	float4 cbLightColorAndStrenth;
-	float4 mLightPosAndRadius;
+	float4 cbLightColorAndStrenth[4];
+	float4 mLightPosAndRadius[4];
 };
 
 #else
@@ -68,8 +68,8 @@ cbuffer cbMaterial : register(b2)
 
 cbuffer cbLight : register(b3)
 {
-	float4 cbLightColorAndStrenth;
-	float4 mLightPosAndRadius;
+	float4 cbLightColorAndStrenth[4];
+	float4 mLightPosAndRadius[4];
 };
 
 #endif
@@ -334,29 +334,6 @@ float4 PS(VertexOut pin) : SV_Target
 	float4 normalMapSample = gTextures[3].Sample(gsamAnisotropicWrap, pin.Coord * 5);
 	float3 bumpedNormalW = NormalSampleToWorldSpace(normalMapSample.rgb, pin.Norm, pin.TangentW);
 	
-	float3 PointLightPos = mLightPosAndRadius.xyz;
-	float LightRadius = mLightPosAndRadius.w;
-	float LightStrenth = cbLightColorAndStrenth.w;
-	float3 LightColor = cbLightColorAndStrenth.rgb;
-	
-	float3 WPos = pin.WorldPos;
-	float FallOff = distance(PointLightPos, WPos);
-	FallOff = LightRadius / (FallOff * FallOff);
-	
-	float3 V = normalize(gEyePosW - pin.WorldPos);
-	//float3 N = bumpedNormalW;
-	float3 N = normalize(pin.Norm);
-	//float3 L = float3(-0.8, 1, 0.5);
-	float3 L = normalize(PointLightPos - WPos);
-	float3 H = normalize(V + L);
-	float3 R = -reflect(V, N);
-	
-	float NoL = saturate(dot(L, N));
-	float NoH = saturate(dot(N, H));
-	float NoV = saturate(dot(N, V));
-	float VoH = saturate(dot(V, H));
-	float NoR = saturate(dot(N, R));
-	
 	float4 BaseColor = gTextures[0].Sample(gsamAnisotropicWrap, pin.Coord);
 	BaseColor.rgb *= cbBaseColor.rgb;
 	
@@ -367,31 +344,58 @@ float4 PS(VertexOut pin) : SV_Target
 	F0 = lerp(F0.rrr, BaseColor.rgb, Metallic);
 
 	float Shadow = CalcShadowFactor(pin.ShadowPosH);
+	
+	for (int i = 0; i < 4; i++)
+	{
+		float3 PointLightPos = mLightPosAndRadius[i].xyz;
+		float LightRadius = mLightPosAndRadius[i].w;
+		float LightStrenth = cbLightColorAndStrenth[i].w;
+		float3 LightColor = cbLightColorAndStrenth[i].rgb;
+		
+		float3 WPos = pin.WorldPos;
+		float FallOff = distance(PointLightPos, WPos);
+		FallOff = LightRadius / (FallOff * FallOff);
+		
+		float3 V = normalize(gEyePosW - pin.WorldPos);
+		//float3 N = bumpedNormalW;
+		float3 N = normalize(pin.Norm);
+		//float3 L = float3(-0.8, 1, 0.5);
+		float3 L = normalize(PointLightPos - WPos);
+		float3 H = normalize(V + L);
+		float3 R = -reflect(V, N);
+	
+		float NoL = saturate(dot(L, N));
+		float NoH = saturate(dot(N, H));
+		float NoV = saturate(dot(N, V));
+		float VoH = saturate(dot(V, H));
+		float NoR = saturate(dot(N, R));
+	
+		float3 Diffuse = Diffuse_Burley(BaseColor.rgb, Roughness, NoV, NoL, NoH);
+	
+		float a2 = Roughness * Roughness * Roughness * Roughness;
+		float D = D_GGX(a2, NoH);
+		float G = Vis_SmithJointApprox(a2, NoV, NoL);
+		float F = FSchlick(VoH, F0);
+	
+		float3 Specular = D * G * F;
 
-	float3 Diffuse = Diffuse_Burley(BaseColor.rgb, Roughness, NoV, NoL, NoH);
-	
-	float a2 = Roughness * Roughness * Roughness * Roughness;
-	float D = D_GGX(a2, NoH);
-	float G = Vis_SmithJointApprox(a2, NoV, NoL);
-	float F = FSchlick(VoH, F0);
-	
-	float3 Specular = D * G * F;
+		Output.rgb += (Diffuse + Specular) * NoL * Shadow * (FallOff * LightStrenth * LightColor);
 
-	Output.rgb += (Diffuse + Specular) * NoL * Shadow * (FallOff * LightStrenth * LightColor);
+	}
+	
+	//float LevelFrom1x1 = 1 - 1.2 * log2(Roughness);
+	//float lod = 11 - 1 - LevelFrom1x1;
+	
+	//float4 reflectionColor = gCubeMap.SampleLevel(gsamAnisotropicClamp, R, lod);
+	////reflectionColor.rgb = pow(reflectionColor, 1.0f / 2.2f);
+	
+	//float2 IBLBRDF = gTextures[2].Sample(gsamPointClamp, float2(NoV, Roughness)).rg;
+	
+	//float3 indirectSpecular = reflectionColor.rgb * (F * IBLBRDF.x + IBLBRDF.y);
 
-	float LevelFrom1x1 = 1 - 1.2 * log2(Roughness);
-	float lod = 11 - 1 - LevelFrom1x1;
-	
-	float4 reflectionColor = gCubeMap.SampleLevel(gsamAnisotropicClamp, R, lod);
-	//reflectionColor.rgb = pow(reflectionColor, 1.0f / 2.2f);
-	
-	float2 IBLBRDF = gTextures[2].Sample(gsamPointClamp, float2(NoV, Roughness)).rg;
-	
-	float3 indirectSpecular = reflectionColor.rgb * (F * IBLBRDF.x + IBLBRDF.y);
-
-	//Temp
-	Output.rgb += 0.03f * BaseColor.rgb * AO;
-	Output.rgb += reflectionColor.rgb * 0.15f;
+	////Temp
+	//Output.rgb += 0.03f * BaseColor.rgb * AO;
+	//Output.rgb += reflectionColor.rgb * 0.15f;
 	
 	return Output;
 }

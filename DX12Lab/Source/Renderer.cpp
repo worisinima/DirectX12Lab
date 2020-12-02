@@ -155,11 +155,7 @@ bool Renderer::InitRenderer(class D3DApp* app)
 	mIBLBRDFPass->Init(mCommandList.Get(), md3dDevice.Get(), mIBLBRDFTarget->GetFormat());
 	mShadowMapPass->InitShadowMapPass(md3dDevice, mCommandList, mShadowMap, 3);
 
-	mSimpleLight = new Light(md3dDevice.Get());
-	mSimpleLight->mLightColor = Vector3(1, 1, 0);
-	mSimpleLight->mStrenth = 3.1415927f;
-	mSimpleLight->mLightPos = Vector3(-10, 10, 10);
-	mSimpleLight->mLightRadius = 100.0f;
+	BuildLightData();
 
 	// Execute the initialization commands.
 	ThrowIfFailed(mCommandList->Close());
@@ -172,6 +168,20 @@ bool Renderer::InitRenderer(class D3DApp* app)
 	OnResize();
 
 	return true;
+}
+
+void Renderer::BuildLightData()
+{
+	mSimpleLight = new Light(md3dDevice.Get());
+	mSimpleLight->mLightData[0].mLightColor = Vector3(1, 1, 1);
+	mSimpleLight->mLightData[0].mStrenth = 3.1415927f;
+	mSimpleLight->mLightData[0].mLightPos = Vector3(-10, 10, 10);
+	mSimpleLight->mLightData[0].mLightRadius = 100.0f;
+
+	mSimpleLight->mLightData[1].mLightColor = Vector3(1, 1, 1);
+	mSimpleLight->mLightData[1].mStrenth = 3.1415927f / 4.0f;
+	mSimpleLight->mLightData[1].mLightPos = Vector3(10, 10, 10);
+	mSimpleLight->mLightData[1].mLightRadius = 100.0f;
 }
 
 void Renderer::CreateCommandObjects()

@@ -527,5 +527,5 @@ void D3DApp::DrawUIContent()
 		ImGui::End();
 	}
 
-	memcpy(&GraphicRender->mSimpleLight->mLightColor, &clear_color, sizeof(float) * 3);
+	memcpy(&GraphicRender->mSimpleLight->mLightData[0].mLightColor, &clear_color, sizeof(float) * 3);
 }
