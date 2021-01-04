@@ -84,6 +84,7 @@ struct VertexIn
     float3 BoneWeights : WEIGHTS;
     uint4 BoneIndices  : BONEINDICES;
 #endif
+	uint VertexId : SV_VertexId;
 };
 
 struct VertexOut
@@ -94,6 +95,8 @@ struct VertexOut
 	float3 TangentW : TANGENT;
 	float3 WorldPos : POSITIONT1;
 	float2 Coord : TEXCOORD0;
+	
+	uint VertexIdPassed : VERTEXID;
 };
 
 VertexOut VS(VertexIn vin)
@@ -137,6 +140,8 @@ VertexOut VS(VertexIn vin)
 	vout.TangentW = mul(normalize(vin.Tangent), (float3x3)gWorld);
 	vout.Coord = vin.Coord;
 	vout.ShadowPosH = mul(posW, gShadowTransform);
+	
+	vout.VertexIdPassed = vin.VertexId;
 	
 	return vout;
 }
@@ -184,11 +189,13 @@ float CalcShadowFactor(float4 shadowPosH)
     [unroll]
 	for (int i = 0; i < 9; ++i)
 	{
+		//percentLit += gTextures[1].SampleLevel(gsamAnisotropicWrap, shadowPosH.xy + offsets[i], 0).r - depth > 0 ? 1 : 0;
 		percentLit += gTextures[1].SampleCmpLevelZero(gsamShadow, shadowPosH.xy + offsets[i], depth).r;
 	}
     
 	return percentLit / 9.0f;
 }
+
 
 float DistributionGGX(float3 N, float3 H, float roughness)
 {
@@ -327,7 +334,7 @@ float RandFast(uint2 PixelPos, float Magic = 3571.0)
 	return Random;
 }
 
-float4 PS(VertexOut pin) : SV_Target
+float4 PS(VertexOut pin, uint PrimitiveID : SV_PrimitiveID) : SV_Target
 {
 	float4 Output = 0.0f;
 	
@@ -383,19 +390,33 @@ float4 PS(VertexOut pin) : SV_Target
 
 	}
 	
-	//float LevelFrom1x1 = 1 - 1.2 * log2(Roughness);
-	//float lod = 11 - 1 - LevelFrom1x1;
+	float3 V = normalize(gEyePosW - pin.WorldPos);
+	//float3 N = bumpedNormalW;
+	float3 N = normalize(pin.Norm);
+	float3 L = float3(-0.8, 1, 0.5);
+	//float3 L = normalize(PointLightPos - WPos);
+	float3 H = normalize(V + L);
+	float3 R = -reflect(V, N);
+	float NoL = saturate(dot(L, N));
+	float NoH = saturate(dot(N, H));
+	float NoV = saturate(dot(N, V));
+	float VoH = saturate(dot(V, H));
+	float NoR = saturate(dot(N, R));
+	float F = FSchlick(VoH, F0);
 	
-	//float4 reflectionColor = gCubeMap.SampleLevel(gsamAnisotropicClamp, R, lod);
-	////reflectionColor.rgb = pow(reflectionColor, 1.0f / 2.2f);
+	float LevelFrom1x1 = 1 - 1.2 * log2(Roughness);
+	float lod = 11 - 1 - LevelFrom1x1;
 	
-	//float2 IBLBRDF = gTextures[2].Sample(gsamPointClamp, float2(NoV, Roughness)).rg;
+	float4 reflectionColor = gCubeMap.SampleLevel(gsamAnisotropicClamp, R, lod);
+	//reflectionColor.rgb = pow(reflectionColor, 1.0f / 2.2f);
 	
-	//float3 indirectSpecular = reflectionColor.rgb * (F * IBLBRDF.x + IBLBRDF.y);
+	float2 IBLBRDF = gTextures[2].Sample(gsamPointClamp, float2(NoV, Roughness)).rg;
+	
+	float3 indirectSpecular = reflectionColor.rgb * (F * IBLBRDF.x + IBLBRDF.y);
 
-	////Temp
-	//Output.rgb += 0.03f * BaseColor.rgb * AO;
-	//Output.rgb += reflectionColor.rgb * 0.15f;
-	
+	//Temp
+	Output.rgb += 0.03f * BaseColor.rgb * AO;
+	Output.rgb += reflectionColor.rgb * 0.15f;
+
 	return Output;
 }
